@@ -20,12 +20,18 @@ contract Token {
     // An address type variable is used to store ethereum accounts.
     address public owner;
 
+    //Mis variables públicas
+    string contenido = "Primer parrafo";
+
     // A mapping is a key/value map. Here we store each account balance.
     mapping(address => uint256) balances;
 
     // The Transfer event helps off-chain aplications understand
     // what happens within your contract.
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
+
+    //Esto es de las historias BBS
+    event NewContent(address indexed _from, string _content);
 
     /**
      * Contract initialization.
@@ -35,6 +41,17 @@ contract Token {
         // account that is deploying the contract.
         balances[msg.sender] = totalSupply;
         owner = msg.sender;
+    }
+
+    /**
+     * Funciones de mi contrato.
+     */
+    function getContenido() external view returns (string memory){
+        return contenido;
+    }
+
+    function setContenido(string memory _contenido) external {
+         emit NewContent(msg.sender, _contenido);
     }
 
     /**

@@ -15,6 +15,7 @@ import { NoWalletDetected } from "./NoWalletDetected";
 import { ConnectWallet } from "./ConnectWallet";
 import { Loading } from "./Loading";
 import { Transfer } from "./Transfer";
+import { Contenido } from "./Contenido";
 import { TransactionErrorMessage } from "./TransactionErrorMessage";
 import { WaitingForTransactionMessage } from "./WaitingForTransactionMessage";
 import { NoTokensMessage } from "./NoTokensMessage";
@@ -49,6 +50,7 @@ export class Dapp extends React.Component {
       // The user's address and balance
       selectedAddress: undefined,
       balance: undefined,
+      contenido: undefined,
       // The ID about transactions being sent, and any possible error with them
       txBeingSent: undefined,
       transactionError: undefined,
@@ -103,6 +105,9 @@ export class Dapp extends React.Component {
               </b>
               .
             </p>
+            <p>
+              El contenido del contrato es: <b>{this.state.contenido}</b>
+            </p>
           </div>
         </div>
 
@@ -155,6 +160,11 @@ export class Dapp extends React.Component {
                 tokenSymbol={this.state.tokenData.symbol}
               />
             )}
+             <Contenido
+                setContenido={(contenido) =>
+                  this._setContenido(contenido)
+                }
+              />
           </div>
         </div>
       </div>
@@ -260,13 +270,35 @@ export class Dapp extends React.Component {
   async _getTokenData() {
     const name = await this._token.name();
     const symbol = await this._token.symbol();
+    const contenido = await this._token.getContenido();
 
-    this.setState({ tokenData: { name, symbol } });
+    this.setState({ tokenData: { name, symbol }, contenido });
   }
 
   async _updateBalance() {
     const balance = await this._token.balanceOf(this.state.selectedAddress);
-    this.setState({ balance });
+    const contenido = await this._token.getContenido();
+    this.setState({ balance, contenido });
+  }
+
+  async _setContenido(contenido) {
+    try {
+      this._dismissTransactionError();
+      const tx = await this._token.setContenido(contenido);
+      this.setState({ txBeingSent: tx.hash });
+      const receipt = await tx.wait();
+      if (receipt.status === 0) {
+        // We can't know the exact error that made the transaction fail when it
+        // was mined, so we throw this generic one.
+        throw new Error("Transaction failed");
+      }
+
+    } catch (error) {
+
+    } finally {
+
+    }
+
   }
 
   // This method sends an ethereum transaction to transfer tokens.
