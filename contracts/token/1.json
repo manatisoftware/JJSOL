@@ -1,0 +1,19 @@
+{
+	"name": "JJTON",
+	"description": "Token de recompensa por muchas cosas y de utilidad para otras",
+	"image": "https:\/\/s3.amazonaws.com\/your-bucket\/images\/{id}.png",
+	"properties": {
+		"simple_property": "example value",
+		"rich_property": {
+			"name": "Cashback",
+			"value": [1,2,3,4],
+			"display_value": "123 Example Value",
+			"class": "emphasis",
+			"css": {
+				"color": "#ffffff",
+				"font-weight": "bold",
+				"text-decoration": "underline"
+			}
+		}
+	}
+}
