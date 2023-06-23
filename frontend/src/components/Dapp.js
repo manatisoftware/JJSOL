@@ -5,8 +5,8 @@ import { ethers } from "ethers";
 
 // We import the contract's artifacts and address here, as we are going to be
 // using them with ethers
-import TokenArtifact from "../contracts/Token.json";
-import contractAddress from "../contracts/contract-address.json";
+import TokenArtifact from "../contracts/TokenJJTONABI.json";
+import contractAddress from "../contracts/contract-address-JJTON.json";
 
 // All the logic of this dapp is contained in the Dapp component.
 // These other components are just presentational ones: they don't have any
@@ -15,7 +15,6 @@ import { NoWalletDetected } from "./NoWalletDetected";
 import { ConnectWallet } from "./ConnectWallet";
 import { Loading } from "./Loading";
 import { Transfer } from "./Transfer";
-import { Contenido } from "./Contenido";
 import { TransactionErrorMessage } from "./TransactionErrorMessage";
 import { WaitingForTransactionMessage } from "./WaitingForTransactionMessage";
 import { NoTokensMessage } from "./NoTokensMessage";
@@ -160,11 +159,6 @@ export class Dapp extends React.Component {
                 tokenSymbol={this.state.tokenData.symbol}
               />
             )}
-             <Contenido
-                setContenido={(contenido) =>
-                  this._setContenido(contenido)
-                }
-              />
           </div>
         </div>
       </div>
@@ -270,35 +264,13 @@ export class Dapp extends React.Component {
   async _getTokenData() {
     const name = await this._token.name();
     const symbol = await this._token.symbol();
-    const contenido = await this._token.getContenido();
 
-    this.setState({ tokenData: { name, symbol }, contenido });
+    this.setState({ tokenData: { name, symbol } });
   }
 
   async _updateBalance() {
     const balance = await this._token.balanceOf(this.state.selectedAddress);
-    const contenido = await this._token.getContenido();
-    this.setState({ balance, contenido });
-  }
-
-  async _setContenido(contenido) {
-    try {
-      this._dismissTransactionError();
-      const tx = await this._token.setContenido(contenido);
-      this.setState({ txBeingSent: tx.hash });
-      const receipt = await tx.wait();
-      if (receipt.status === 0) {
-        // We can't know the exact error that made the transaction fail when it
-        // was mined, so we throw this generic one.
-        throw new Error("Transaction failed");
-      }
-
-    } catch (error) {
-
-    } finally {
-
-    }
-
+    this.setState({ balance });
   }
 
   // This method sends an ethereum transaction to transfer tokens.

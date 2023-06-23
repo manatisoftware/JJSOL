@@ -22,14 +22,14 @@ async function main() {
 
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  const Token = await ethers.getContractFactory("Token");
-  const token = await Token.deploy();
-  await token.deployed();
+  const TokenJJTON = await ethers.getContractFactory("TokenJJNFT-ERC1155");
+  const tokenJJTON = await TokenJJTON.deploy();
+  await tokenJJTON.deployed();
 
-  console.log("Token address:", token.address);
+  console.log("Token JJTON address:", tokenJJTON.address);
 
   // We also save the contract's artifacts and address in the frontend directory
-  saveFrontendFiles(token);
+  saveFrontendFiles(tokenJJTON);
 }
 
 function saveFrontendFiles(token) {
@@ -41,14 +41,14 @@ function saveFrontendFiles(token) {
   }
 
   fs.writeFileSync(
-    path.join(contractsDir, "contract-address.json"),
+    path.join(contractsDir, "contract-address-JJTON.json"),
     JSON.stringify({ Token: token.address }, undefined, 2)
   );
 
-  const TokenArtifact = artifacts.readArtifactSync("Token");
+  const TokenArtifact = artifacts.readArtifactSync("TokenJJTON");
 
   fs.writeFileSync(
-    path.join(contractsDir, "Token.json"),
+    path.join(contractsDir, "TokenJJTONABI.json"),
     JSON.stringify(TokenArtifact, null, 2)
   );
 }
